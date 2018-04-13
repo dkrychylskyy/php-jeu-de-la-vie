@@ -1,0 +1,17 @@
+.grille {
+    border: 1px;
+    border-color: green;
+    border-style: dotted;
+    display: inline-flex;
+}
+.cellule_M {
+    width: 10px;
+    height: 10px;
+    background-color: yellow;
+}
+
+.cellule_V {
+    width: 10px;
+    height: 10px;
+    background-color: darkgreen;
+}
