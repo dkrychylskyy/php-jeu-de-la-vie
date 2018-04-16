@@ -20,11 +20,11 @@
  * Time: 11:33
  */
 include 'Grille.php';
-
 /*
  * Autorefresh
  */
-
+const VIVANTE = "cellule_V";
+const MORTE = "cellule_M";
 
 $url1=$_SERVER['REQUEST_URI'];
 
@@ -50,14 +50,61 @@ if (!isset($_SESSION['initGrille'])){
     $_SESSION['grille'] = serialize($grille);
 }
 
-echo $_SESSION['initGrille'];
+/*echo $_SESSION['initGrille'];*/
 
-$grille = unserialize($_SESSION['grille']);
 
+/*for ($i = 0; $i < count($grille); $i++) {
+    var_dump($thisgrille[$i]) ;
+    for ($j = 0; $j < count($thisgrille[$i]); $j++) {
+        // Creation tableau ou tous cellules = mortes
+        $countCellulesVivantes = 0;
+        $celluleCourante = $this->grille[$i][$j];
+        if ($celluleCourante.getEtat() && $celluleCourante.getEtat() == self::MORTE){
+            // Verif à gauche
+            if ($grille[$i][$j - 1 ].getEtat() == self::VIVANTE) {
+                $countCellulesVivantes += 1;
+            }
+            // Verif cellule à droite
+            if ($grille[$i][$j + 1 ].getEtat() == self::VIVANTE) {
+                $countCellulesVivantes += 1;
+            }
+            // Verif cellule à haut
+            if ($grille[$i + 1][$j].getEtat() == self::VIVANTE) {
+                $countCellulesVivantes += 1;
+            }
+            // Verif cellule en bas
+            if ($grille[$i - 1][$j].getEtat() == self::VIVANTE) {
+                $countCellulesVivantes += 1;
+            }
+            // Verif cellule diagonale à haut - gauche
+            if ($grille[$i - 1][$j - 1].getEtat() == self::VIVANTE) {
+                $countCellulesVivantes += 1;
+            }
+            // Verif cellule diagonale à haut - droit
+            if ($grille[$i - 1][$j + 1].getEtat() == self::VIVANTE) {
+                $countCellulesVivantes += 1;
+            }
+            // Verif cellule diagonale en bas - gauche
+            if ($grille[$i + 1][$j - 1].getEtat() == self::VIVANTE) {
+                $countCellulesVivantes += 1;
+            }
+            // Verif cellule diagonale en bas - droit
+            if ($grille[$i + 1][$j + 1].getEtat() == self::VIVANTE) {
+                $countCellulesVivantes += 1;
+            }
+
+            if ($celluleCourante == 3){
+                $celluleCourante.setEtat(self::VIVANTE);
+            }
+        }
+    }
+}*/
+
+$grilleUnserialize = unserialize($_SESSION['grille']);
 
 /* Afficher la grille*/
 echo "<div class='grille'>";
-foreach ($grille as $line){
+foreach ($grilleUnserialize as $line){
     echo '<div class="cologne">';
     foreach ($line as $cell){
         $etat = $cell->getEtat();
