@@ -1,4 +1,4 @@
-<?php session_start() ?>
+<?php /*session_start() */?>
 
 <!doctype html>
 <html lang="en">
@@ -19,7 +19,7 @@
  * Date: 15/03/2018
  * Time: 11:33
  */
-phpinfo();
+
 include 'Grille.php';
 /*
  * Autorefresh
@@ -29,7 +29,7 @@ const MORTE = "cellule_M";
 
 $url1=$_SERVER['REQUEST_URI'];
 
-header("Refresh: 5; URL=$url1");
+header("Refresh: 1200; URL=$url1");
 
 if (!isset($_SESSION['init'])){
 
@@ -52,7 +52,7 @@ if (!isset($_SESSION['init'])){
 }
 
 if (isset($_SESSION['init'])){
-    changerEtatCellule3Voisines();
+    $_SESSION['grille'] = serialize(changerEtatCellule3Voisines());
 }
 
 $grilleUnserialize = unserialize($_SESSION['grille']);
@@ -70,7 +70,7 @@ foreach ($grilleUnserialize as $line){
 }
 echo "</div>";
 
-echo "<a href=\"index.html\">Retour</a>";
+echo "<a href='index.php'>Retour</a>";
 
 
 /*
@@ -80,37 +80,35 @@ echo "<a href=\"index.html\">Retour</a>";
 function changerEtatCellule3Voisines(){
     $grilleUnserializeBoucle = unserialize($_SESSION['grille']);
     for ($i = 0; $i < count($grilleUnserializeBoucle); $i++){
+        //var_dump($i);
         for ($j = 0; $j < count($grilleUnserializeBoucle[$i]); $j++){
-
+        //var_dump($j);
             // Creation tableau ou tous cellules = mortes
             $celluleCourante = $grilleUnserializeBoucle[$i][$j];
             $countCellulesVivantes = 0;
-            var_dump($celluleCourante->getEtat());
+            //var_dump($celluleCourante->getEtat());
             if (isset($celluleCourante) && $celluleCourante->getEtat() == MORTE){
                 // Verif à gauche
-                if (isset($grilleUnserializeBoucle[$i][$j - 1])&& $grilleUnserializeBoucle[$i][$j - 1]->getEtat() == VIVANTE) {
-                    //var_dump("Verif à gauche" . "\n" . $grilleUnserializeBoucle[$i][$j - 1]->getEtat() . "\n");
-
+                if (isset($grilleUnserializeBoucle[$i-1][$j])&& $grilleUnserializeBoucle[$i-1][$j]->getEtat() == VIVANTE) {
+                    //var_dump("Verif à gauche" . "\n" . $grilleUnserializeBoucle[$i-1][$j]->getEtat() . "\n");
                     $countCellulesVivantes++;
-
                 }
                 // Verif cellule à droite
-                if (isset($grilleUnserializeBoucle[$i][$j + 1 ])&& $grilleUnserializeBoucle[$i][$j + 1]->getEtat() == VIVANTE) {
+                if (isset($grilleUnserializeBoucle[$i+1][$j])&& $grilleUnserializeBoucle[$i+1][$j]->getEtat() == VIVANTE) {
                     $countCellulesVivantes++;
-                    //var_dump("Verif à droit" . "\n" . $grilleUnserializeBoucle[$i][$j + 1]->getEtat() . "\n");
-
+                    //var_dump("Verif à droit" . "\n" . $grilleUnserializeBoucle[$i+1][$j]->getEtat() . "\n");
                 }
                 // Verif cellule à haut
-                if (isset($grilleUnserializeBoucle[$i + 1][$j])&& $grilleUnserializeBoucle[$i + 1][$j]->getEtat() == VIVANTE) {
+                if (isset($grilleUnserializeBoucle[$i][$j-1])&& $grilleUnserializeBoucle[$i][$j-1]->getEtat() == VIVANTE) {
                     $countCellulesVivantes++;
                     //var_dump("Verif à haut" . "\n" . $grilleUnserializeBoucle[$i + 1][$j]->getEtat() . "\n");
-
+                    //var_dump("index à haut" . $i + 1 . " " . $j);
                 }
                 // Verif cellule en bas
-                if (isset($grilleUnserializeBoucle[$i - 1][$j])&& $grilleUnserializeBoucle[$i - 1][$j]->getEtat() == VIVANTE) {
+                if (isset($grilleUnserializeBoucle[$i][$j+1])&& $grilleUnserializeBoucle[$i][$j+1]->getEtat() == VIVANTE) {
                     $countCellulesVivantes++;
-                    //var_dump("Verif en bas" . "\n" . $grilleUnserializeBoucle[$i - 1][$j]->getEtat() . "\n");
-
+                    /*var_dump("Verif en bas" . "\n" . $grilleUnserializeBoucle[$i - 1][$j]->getEtat() . "\n");
+                    var_dump("index à bas" . $i - 1 . " " . $j);*/
                 }
                 // Verif cellule diagonale à haut - gauche
                 if (isset($grilleUnserializeBoucle[$i - 1][$j - 1])&& $grilleUnserializeBoucle[$i - 1][$j - 1]->getEtat() == VIVANTE) {
@@ -118,12 +116,12 @@ function changerEtatCellule3Voisines(){
                     //var_dump("Verif à haut - gauche" . "\n" . $grilleUnserializeBoucle[$i - 1][$j - 1]->getEtat() . "\n");
                 }
                 // Verif cellule diagonale à haut - droit
-                if (isset($grilleUnserializeBoucle[$i - 1][$j + 1])&& $grilleUnserializeBoucle[$i - 1][$j + 1]->getEtat() == VIVANTE) {
+                if (isset($grilleUnserializeBoucle[$i + 1][$j - 1])&& $grilleUnserializeBoucle[$i + 1][$j - 1]->getEtat() == VIVANTE) {
                     $countCellulesVivantes++;
                     //var_dump("Verif à haut - droit" . "\n" . $grilleUnserializeBoucle[$i - 1][$j + 1]->getEtat() . "\n");
                 }
                 // Verif cellule diagonale en bas - gauche
-                if (isset($grilleUnserializeBoucle[$i + 1][$j - 1])&& $grilleUnserializeBoucle[$i + 1][$j - 1]->getEtat() == VIVANTE) {
+                if (isset($grilleUnserializeBoucle[$i - 1][$j + 1])&& $grilleUnserializeBoucle[$i - 1][$j + 1]->getEtat() == VIVANTE) {
                     $countCellulesVivantes++;
                     //var_dump("Verif en bas - gauche" . "\n" . $grilleUnserializeBoucle[$i + 1][$j - 1]->getEtat() . "\n");
                 }
@@ -138,7 +136,7 @@ function changerEtatCellule3Voisines(){
             }
         }
     }
-    $_SESSION['grille'] = serialize($grilleUnserializeBoucle);
+    return $grilleUnserializeBoucle;
 };
 ?>
 
